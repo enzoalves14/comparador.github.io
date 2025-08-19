@@ -62,10 +62,29 @@
 </head>
 <body>
   <div class="card">
-    <div class="avatar"></div>
-    <h1>Seu Perfil</h1>
-    <p>Funcionalidade de perfil não implementada.</p>
+   <div class="avatar" id="avatar"></div>
+    <h1 id="name">Seu Perfil</h1>
+    <p id="email"></p>
     <a class="btn" href="index.html">Voltar</a>
   </div>
+  <script>
+    const token = localStorage.getItem('token');
+    if(!token){
+      window.location.href = 'login.html';
+    } else {
+      fetch('/me', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Unauthorized');
+          return res.json();
+        })
+        .then(data => {
+          document.getElementById('name').textContent = data.name;
+          document.getElementById('email').textContent = data.email || '';
+        })
+        .catch(() => window.location.href = 'login.html');
+    }
+  </script>
 </body>
 </html>
