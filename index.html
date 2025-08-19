@@ -10,10 +10,10 @@
 <body class="page-index">
   <header>
     <div class="container row">
-      <div class="row" style="gap:12px">
-        <div style="font-size:26px">🛒</div>
+     <div class="row gap-12">
+        <div class="logo-icon">🛒</div>
         <div>
-          <div style="font-weight:800">Comparador de Supermercados</div>
+          <div class="brand-name">Comparador de Supermercados</div>
           <div class="hint">Protótipo HTML+CSS+JS · dados mockáveis</div>
         </div>
       </div>
@@ -38,20 +38,20 @@
       <div class="card">
         <h2>Buscar produtos</h2>
         <div class="sub">Adicione ao carrinho para comparar os totais</div>
-        <div class="row" style="gap:10px">
+         <div class="row">
           <input id="searchInput" placeholder="Ex: arroz, leite, café…" />
           <span class="spacer"></span>
         </div>
-        <div id="catPills" class="row" style="margin-top:10px"></div>
+       <div id="catPills" class="row mt-10"></div>
 
-        <div class="grid products" id="productsGrid" style="margin-top:12px"></div>
+        <div class="grid products mt-12" id="productsGrid"></div>
       </div>
 
       <div class="card">
         <h2>Carrinho</h2>
         <div class="sub">Edite quantidades ou remova itens</div>
         <div id="cartEmpty" class="hint">Seu carrinho está vazio. Adicione produtos para começar a comparar. ✨</div>
-        <div style="overflow:auto" id="cartTableWrap" hidden>
+        <div class="overflow-auto" id="cartTableWrap" hidden>
           <table>
             <thead>
               <tr>
@@ -72,29 +72,29 @@
       <div class="card">
         <h2>Mercados</h2>
         <div class="sub">Selecione para comparar</div>
-        <div class="row" style="gap:8px;margin-bottom:8px">
+        <div class="row gap-8 mb-8">
           <button class="btn" id="btnAllStores">Todos</button>
           <button class="btn" id="btnNoStores">Nenhum</button>
         </div>
-        <div id="storesList" class="grid" style="grid-template-columns:1fr;gap:8px"></div>
+        <div id="storesList" class="grid grid-cols-1 gap-8"></div>
       </div>
 
       <div class="card">
         <h2>Comparação</h2>
         <div class="sub">Totais por mercado selecionado</div>
-        <div id="compareWrap" class="grid" style="gap:10px"></div>
-        <div id="bestWrap" class="hint" style="margin-top:8px"></div>
+        <div id="compareWrap" class="grid gap-10"></div>
+        <div id="bestWrap" class="hint mt-8"></div>
       </div>
 
       <div class="card">
         <h2>Editor rápido (mock)</h2>
         <div class="sub">Edite preços/mercados inline</div>
-        <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px">
+        <div class="grid grid-cols-3 gap-8">
           <input id="storeName" placeholder="Novo mercado (nome)" />
           <input id="storeDist" placeholder="Distância km" type="number" />
           <button id="addStore" class="btn">Adicionar mercado</button>
         </div>
-        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px">
+        <div class="grid grid-cols-4 gap-8 mt-8">
           <input id="prodName" placeholder="Novo produto (nome)" />
           <input id="prodUnit" placeholder="Unidade (ex: un, pct)" value="un" />
           <select id="prodCat">
@@ -106,7 +106,7 @@
           </select>
           <button id="addProd" class="btn">Adicionar produto</button>
         </div>
-        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px">
+        <div class="grid grid-cols-4 gap-8 mt-8">
           <select id="priceStore"></select>
           <select id="priceProd"></select>
           <input id="priceVal" placeholder="Preço R$" type="number" step="0.01" />
