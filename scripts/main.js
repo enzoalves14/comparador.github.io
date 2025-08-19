@@ -279,8 +279,28 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     $('#clearBtn').onclick = ()=>{ if(confirm('Limpar carrinho e dados locais?')){ cart=[]; save('cart', cart); renderCart(); renderCompare(); }};
 
-     $('#menuToggle').onclick = () => {
-     $('#menu').classList.toggle('open');
+    const menuToggle = $('#menuToggle');
+    const menu = $('#menu');
+    function closeMenu(){
+      menu.classList.remove('open');
+      menuToggle.textContent = '☰';
+      menuToggle.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', outsideClick);
+    }
+    function outsideClick(e){
+      if(!menu.contains(e.target) && e.target !== menuToggle){
+        closeMenu();
+      }
+    }
+    menuToggle.onclick = (e) => {
+      const open = menu.classList.toggle('open');
+      menuToggle.textContent = open ? '✕' : '☰';
+      menuToggle.setAttribute('aria-expanded', String(open));
+      if(open){
+        document.addEventListener('click', outsideClick);
+      } else {
+        document.removeEventListener('click', outsideClick);
+      }
     };
     // back to top
     $('#scrollTop').onclick = ()=> window.scrollTo({top:0, behavior:'smooth'});
