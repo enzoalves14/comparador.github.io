@@ -64,6 +64,11 @@
     .product .meta{font-size:.8rem;color:var(--muted)}
     .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
     .badge{border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:.75rem;color:var(--muted)}
+ .product-header{justify-content:space-between}
+    @media(max-width:599px){
+      .product-header{flex-direction:column;align-items:stretch}
+      .product-header .btn{width:100%}
+    }
 
     /* table */
     table{width:100%;border-collapse:collapse}
@@ -285,8 +290,7 @@
           return `<span class="badge">${s.name.split(' ')[0]}: ${price!=null? brl(price): '—'}</span>`;
         }).join('');
         return `<div class="product">
-          <div class="row" style="justify-content:space-between">
-            <div>
+          <div class="row product-header">
               <div style="font-weight:600">${p.name}</div>
               <div class="meta">${p.category} · ${p.unit}</div>
             </div>
