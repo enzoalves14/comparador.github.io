@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const $ = (sel, el = document) => el.querySelector(sel);
   const token = localStorage.getItem('token');
+  const isGuest = localStorage.getItem('guest') === 'true';
 
   async function loadProfile() {
     if (!token) return;
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok) {
         const data = await res.json();
         localStorage.setItem('token', data.token);
+        localStorage.removeItem('guest');
         window.location.href = 'index.html';
       } else {
         alert('Falha no login');
@@ -41,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#guest')?.addEventListener('click', () => {
       localStorage.removeItem('token');
+      localStorage.setItem('guest', 'true');
       window.location.href = 'index.html';
     });
   }
@@ -66,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (document.body.classList.contains('page-profile')) {
-    if (!token) {
-      window.location.href = 'login.html';
-      return;
-    }
+      if (!token && !isGuest) {
+        window.location.href = 'login.html';
+        return;
+      }
     loadProfile();
     form?.addEventListener('submit', e => {
       e.preventDefault();
