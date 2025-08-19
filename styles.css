@@ -1,9 +1,9 @@
 :root{
-  --bg: #0b0c10;
+  --bg: #05080f;
   --card: #111218;
   --card-2:#151824;
   --muted:#8892b0;
-  --txt: #e6edf6;
+  --txt: #ffffff;
   --accent:#7cfc9a;
   --accent-2:#8ab4ff;
   --brand:#b388ff;
@@ -35,14 +35,26 @@ header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(8px);background:
 .sub{color:var(--muted);font-size:.85rem;margin-bottom:12px}
 
 /* controls */
-.btn{appearance:none;border:1px solid var(--border);background:#0f1220;color:var(--txt);padding:10px 12px;border-radius:12px;cursor:pointer;transition:.2s;box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.btn{appearance:none;border:1px solid var(--border);background:#0f1220;color:var(--txt);padding:10px 12px;border-radius:12px;cursor:pointer;transition:.2s;box-shadow:0 2px 0 rgba(0,0,0,.2);min-height:44px}
 .btn:hover{transform:translateY(-1px);background:#12162a}
 .btn:active{transform:translateY(0)}
 .btn.ghost{background:transparent}
 .btn.primary{background:linear-gradient(140deg,var(--accent-2),var(--brand));border-color:transparent;color:#0b0c10}
 
-input,select{background:#0f1220;color:var(--txt);border:1px solid var(--border);border-radius:12px;padding:10px;outline:none;transition:.2s}
+input,select{background:#0f1220;color:var(--txt);border:1px solid var(--border);border-radius:12px;padding:10px;outline:none;transition:.2s;min-height:44px}
 input:focus,select:focus{box-shadow:0 0 0 3px rgba(59,130,246,.35);border-color:var(--ring)}
+button{min-height:44px}
+
+@media(max-width:420px){
+  body{font-size:18px}
+  .btn{padding:14px 18px}
+  .container{padding:20px}
+  .wrap{gap:20px}
+  .row{gap:12px}
+  .grid{gap:16px}
+  .card{margin-bottom:16px}
+}
+
 
 .pill{border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-size:.9rem;cursor:pointer;background:#0f1220}
 .pill.active{background:linear-gradient(140deg,#0f172a,#111827);border-color:#2a3148}
@@ -107,8 +119,8 @@ th{color:var(--muted);text-align:left}
 body.page-login,body.page-register,body.page-profile{background:var(--bg);display:flex;align-items:center;justify-content:center;height:100vh}
 body.page-login .card,body.page-register .card,body.page-profile .card{padding:24px;width:100%;max-width:320px}
 form.card h1{text-align:center;margin-top:0}
-body.page-login input,body.page-register input,body.page-profile input{display:block;width:100%;margin-bottom:12px;background:#0f1220;color:var(--txt);border:1px solid var(--border);border-radius:12px;padding:10px;outline:none}
-body.page-login button,body.page-register button{width:100%;appearance:none;border:1px solid var(--border);background:linear-gradient(140deg,var(--accent-2),var(--brand));border-radius:12px;padding:10px;color:#0b0c10;font-weight:bold;cursor:pointer}
+body.page-login button,body.page-register button{width:100%;appearance:none;border:1px solid var(--border);background:linear-gradient(140deg,var(--accent-2),var(--brand));border-radius:12px;padding:10px;color:#0b0c10;font-weight:bold;cursor:pointer;min-height:44px}
+body.page-login .link-button,body.page-register .link-button{display:block;width:100%;appearance:none;text-align:center;border:1px solid var(--border);background:linear-gradient(140deg,var(--accent-2),var(--brand));border-radius:12px;padding:10px;color:#0b0c10;font-weight:bold;text-decoration:none;cursor:pointer;margin-top:12px;min-height:44px}
 body.page-login .link-button,body.page-register .link-button{display:block;width:100%;appearance:none;text-align:center;border:1px solid var(--border);background:linear-gradient(140deg,var(--accent-2),var(--brand));border-radius:12px;padding:10px;color:#0b0c10;font-weight:bold;text-decoration:none;cursor:pointer;margin-top:12px}
 body.page-profile .btn{appearance:none;border:1px solid var(--border);background:linear-gradient(140deg,var(--accent-2),var(--brand));border-radius:12px;padding:10px;color:#0b0c10;font-weight:bold;cursor:pointer;width:100%;margin-top:12px;text-decoration:none;display:block}
 body.page-profile h1{margin-top:0;text-align:center}
