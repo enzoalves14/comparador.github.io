@@ -30,14 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
       { id: 'c', name: 'Hiper Cometa', distanceKm: 6.0 },
     ];
     const DEFAULT_PRODUCTS = [
-      { id: 'arroz5kg', name: 'Arroz 5kg', unit: 'pct', category: 'Grãos' },
-      { id: 'feijao1kg', name: 'Feijão 1kg', unit: 'pct', category: 'Grãos' },
-      { id: 'leite1l', name: 'Leite 1L', unit: 'un', category: 'Laticínios' },
-      { id: 'oleo900ml', name: 'Óleo 900ml', unit: 'un', category: 'Mercearia' },
-      { id: 'acucar1kg', name: 'Açúcar 1kg', unit: 'pct', category: 'Mercearia' },
-      { id: 'cafe500g', name: 'Café 500g', unit: 'pct', category: 'Mercearia' },
-      { id: 'papelhig6', name: 'Papel Higiênico 6un', unit: 'fd', category: 'Higiene' },
-      { id: 'sabaoPo1kg', name: 'Sabão em Pó 1kg', unit: 'pct', category: 'Limpeza' },
+       { id: 'arroz5kg', name: 'Arroz 5kg', unit: 'pct', category: 'Grãos', image: 'images/arroz5kg.png' },
+      { id: 'feijao1kg', name: 'Feijão 1kg', unit: 'pct', category: 'Grãos', image: 'images/feijao1kg.png' },
+      { id: 'leite1l', name: 'Leite 1L', unit: 'un', category: 'Laticínios', image: 'images/leite1l.png' },
+      { id: 'oleo900ml', name: 'Óleo 900ml', unit: 'un', category: 'Mercearia', image: 'images/oleo900ml.png' },
+      { id: 'acucar1kg', name: 'Açúcar 1kg', unit: 'pct', category: 'Mercearia', image: 'images/acucar1kg.png' },
+      { id: 'cafe500g', name: 'Café 500g', unit: 'pct', category: 'Mercearia', image: 'images/cafe500g.png' },
+      { id: 'papelhig6', name: 'Papel Higiênico 6un', unit: 'fd', category: 'Higiene', image: 'images/papelhig6.png' },
+      { id: 'sabaoPo1kg', name: 'Sabão em Pó 1kg', unit: 'pct', category: 'Limpeza', image: 'images/sabaoPo1kg.png' },
     ];
     const DEFAULT_PRICES = {
       a: {arroz5kg:27.9, feijao1kg:8.49, leite1l:4.39, oleo900ml:6.59, acucar1kg:4.99, cafe500g:18.9, papelhig6:15.5, sabaoPo1kg:12.9},
@@ -78,7 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
           return `<span class="badge">${s.name.split(' ')[0]}: ${price!=null? brl(price): '—'}</span>`;
         }).join('');
         return `<div class="product">
+          <img src="${p.image}" alt="${p.name}" />
           <div class="row product-header">
+            <div class="info">
               <div style="font-weight:600">${p.name}</div>
               <div class="meta">${p.category} · ${p.unit}</div>
             </div>
