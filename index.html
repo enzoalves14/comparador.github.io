@@ -217,6 +217,9 @@
     const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
     const brl = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     const clamp = (n,min,max) => Math.max(min, Math.min(max, n));
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
 
     const save = (k, v) => { try { localStorage.setItem('proto-'+k, JSON.stringify(v)); } catch(e){} };
     const load = (k, d=null) => { try { const v = localStorage.getItem('proto-'+k); return v? JSON.parse(v): d; } catch(e){ return d; } };
@@ -248,6 +251,12 @@
       b: {arroz5kg:29.5, feijao1kg:7.99, leite1l:4.19, oleo900ml:6.99, acucar1kg:4.59, cafe500g:17.5, papelhig6:14.9, sabaoPo1kg:13.9},
       c: {arroz5kg:26.9, feijao1kg:8.79, leite1l:4.69, oleo900ml:6.49, acucar1kg:4.79, cafe500g:19.5, papelhig6:16.9, sabaoPo1kg:12.5}
     };
+    function initCache(){
+      if(!load('stores')) save('stores', DEFAULT_STORES);
+      if(!load('products')) save('products', DEFAULT_PRODUCTS);
+      if(!load('prices')) save('prices', DEFAULT_PRICES);
+    }
+    initCache();
 
     // ---------- Estado ----------
     let stores = load('stores', DEFAULT_STORES);
