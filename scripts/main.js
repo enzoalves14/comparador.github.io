@@ -1,4 +1,6 @@
-if(!localStorage.getItem('token')){
+const token = localStorage.getItem('token');
+const isGuest = localStorage.getItem('guest') === 'true';
+if (!token && !isGuest) {
   window.location.href = 'login.html';
 }
 
