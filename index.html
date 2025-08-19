@@ -116,6 +116,7 @@
         <label class="btn ghost" for="importFile">Importar JSON</label>
         <input id="importFile" type="file" accept="application/json" hidden />
         <button class="btn ghost" id="clearBtn" title="Limpar carrinho e dados locais">Limpar</button>
+        <span id="greeting" class="hint"></span>
         <a class="btn ghost" href="login.html">Login</a>
         <a class="btn ghost" href="profile.html">Perfil</a>
       </div>
@@ -482,9 +483,18 @@
     };
     // back to top
     $('#scrollTop').onclick = ()=> window.scrollTo({top:0, behavior:'smooth'});
+async function loadGreeting(){
+      try{
+        const res = await fetch('/me');
+        if(!res.ok) return;
+        const user = await res.json();
+        if(user?.name) $('#greeting').textContent = `Olá, ${user.name}`;
+      }catch(err){ console.error(err); }
+    }
 
     // init
     renderAll();
+    loadGreeting();
   </script>
 </body>
 </html>
