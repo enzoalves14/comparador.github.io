@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="page-login">
-  <form class="card" onsubmit="login(event)">
+  <form class="card" >
     <h1>Entrar</h1>
     <input id="user" type="text" placeholder="Usuário" required />
     <input id="pass" type="password" placeholder="Senha" required />
@@ -16,31 +16,7 @@
      <button type="button" id="guest" class="link-button">Acessar como visitante</button>
   </form>
   
-  <script>
-    function login(e){
-      e.preventDefault();
-       const username = document.getElementById('user').value;
-      const password = document.getElementById('pass').value;
-      fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-        .then(res => {
-          if (!res.ok) throw new Error('Falha no login');
-          return res.json();
-        })
-        .then(data => {
-          localStorage.setItem('token', data.token);
-          window.location.href = 'index.html';
-        })
-        .catch(() => alert('Usuário ou senha inválidos'));
-    }
-    
-    document.getElementById('guest').onclick = () => {
-      localStorage.setItem('token', 'guest');
-      window.location.href = 'index.html';
-    };
-  </script>
+   <script src="scripts/auth.js"></script>
+  
 </body>
 </html>
