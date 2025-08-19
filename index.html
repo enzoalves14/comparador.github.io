@@ -4,101 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Comparador de Supermercados · Protótipo</title>
-  <style>
-    :root{
-      --bg: #0b0c10;
-      --card: #111218;
-      --card-2:#151824;
-      --muted:#8892b0;
-      --txt: #e6edf6;
-      --accent:#7cfc9a;
-      --accent-2:#8ab4ff;
-      --brand:#b388ff;
-      --ring:#3b82f6;
-      --border:#222739;
-      --warn:#ffcf70;
-      --good:#5ee6a8;
-      --bad:#ff7b7b;
-      --radius:18px;
-      --shadow:0 6px 24px rgba(0,0,0,.35);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:radial-gradient(1200px 800px at 10% -10%, #1b1d2b 0%, #0b0c10 55%), var(--bg);color:var(--txt);font:16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial}
-    a{color:inherit}
-
-    /* layout */
-    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(8px);background:rgba(11,12,16,.65);border-bottom:1px solid var(--border);z-index:50}
-    .container{max-width:1200px;margin:0 auto;padding:16px}
-    .wrap{display:grid;gap:16px}
-    @media(min-width:900px){.wrap{grid-template-columns:2fr 1fr}}
-
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .spacer{flex:1}
-
-    /* cards */
-    .card{background:linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
-    .card h2{margin:0 0 6px;font-size:1rem}
-    .sub{color:var(--muted);font-size:.85rem;margin-bottom:12px}
-
-    /* controls */
-    .btn{appearance:none;border:1px solid var(--border);background:#0f1220;color:var(--txt);padding:10px 12px;border-radius:12px;cursor:pointer;transition:.2s;box-shadow:0 2px 0 rgba(0,0,0,.2)}
-    .btn:hover{transform:translateY(-1px);background:#12162a}
-    .btn:active{transform:translateY(0)}
-    .btn.ghost{background:transparent}
-    .btn.primary{background:linear-gradient(140deg, var(--accent-2), var(--brand));border-color:transparent;color:#0b0c10}
-
-    input, select{background:#0f1220;color:var(--txt);border:1px solid var(--border);border-radius:12px;padding:10px;outline:none;transition:.2s}
-    input:focus, select:focus{box-shadow:0 0 0 3px rgba(59,130,246,.35);border-color:var(--ring)}
-
-    .pill{border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-size:.9rem;cursor:pointer;background:#0f1220}
-    .pill.active{background:linear-gradient(140deg,#0f172a,#111827);border-color:#2a3148}
-
-    /* product grid */
-    .grid{display:grid;gap:12px}
-    .grid.products{grid-template-columns:1fr}
-    @media(min-width:600px){.grid.products{grid-template-columns:repeat(2,1fr)}}
-    @media(min-width:1024px){.grid.products{grid-template-columns:repeat(3,1fr)}}
-
-    .product{border:1px solid var(--border);border-radius:16px;padding:12px;background:linear-gradient(180deg,#0f111a,#0e1020)}
-    .product .meta{font-size:.8rem;color:var(--muted)}
-    .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-    .badge{border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:.75rem;color:var(--muted)}
- .product-header{justify-content:space-between}
-    @media(max-width:599px){
-      .product-header{flex-direction:column;align-items:stretch}
-      .product-header .btn{width:100%}
-    }
-
-    /* table */
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px;border-bottom:1px solid var(--border);font-size:.95rem}
-    th{color:var(--muted);text-align:left}
-
-    .store{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border);border-radius:14px;padding:10px;background:linear-gradient(180deg,#0f111a,#0e1020)}
-    .store.best{outline:2px solid var(--good);}
-
-    .hint{color:var(--muted);font-size:.9rem}
-    .kpi{font-weight:700}
-    .kpi.good{color:var(--good)}
-
-    .footer{color:var(--muted);font-size:.8rem;text-align:center;padding:24px}
-
-    /* FAB on mobile */
-    .fab{position:fixed;right:16px;bottom:16px;background:linear-gradient(140deg, var(--accent), var(--brand));border:none;border-radius:999px;width:56px;height:56px;color:#0b0c10;font-size:24px;box-shadow:var(--shadow);cursor:pointer}
-   /* mobile menu */
-    .mobile-only{display:block}
-   @media(min-width:600px){.mobile-only{display:none}}
-    #menuToggle{font-size:24px;padding:10px 12px}
-    #menu{display:flex;gap:10px;flex-wrap:wrap}
-    @media(max-width:599px){
-      #menu{display:none;flex-direction:column;gap:6px;background:var(--card);padding:12px;border-radius:var(--radius);margin-top:8px}
-      #menu.open{display:flex}
-    }
-
-  </style>
+  <link rel="stylesheet" href="styles.css">
+  
 </head>
-<body>
+<body class="page-index">
   <script>
     if(!localStorage.getItem('token')){
       window.location.href = 'login.html';
