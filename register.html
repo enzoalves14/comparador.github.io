@@ -27,6 +27,8 @@
     <h1 style="text-align:center;margin-top:0">Criar Conta</h1>
     <input id="user" type="text" placeholder="Usuário" required />
     <input id="pass" type="password" placeholder="Senha" required />
+    <input id="name" type="text" placeholder="Nome (opcional)" />
+    <input id="email" type="email" placeholder="Email (opcional)" />
     <button type="submit">Registrar</button>
   </form>
   <script>
@@ -34,18 +36,31 @@
       e.preventDefault();
       const username = document.getElementById('user').value;
       const password = document.getElementById('pass').value;
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
       fetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password, name, email })
       })
         .then(res => {
           if (!res.ok) throw new Error('Falha no registro');
           return res.json();
         })
         .then(() => {
-          alert('Usuário criado com sucesso');
-          window.location.href = 'login.html';
+          return fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Falha no login');
+          return res.json();
+        })
+        .then(data => {
+          localStorage.setItem('token', data.token);
+          window.location.href = 'index.html';
         })
         .catch(() => alert('Erro ao criar usuário'));
     }
