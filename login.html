@@ -32,8 +32,22 @@
   <script>
     function login(e){
       e.preventDefault();
-      alert('Funcionalidade de login não implementada');
-    }
+       const username = document.getElementById('user').value;
+      const password = document.getElementById('pass').value;
+      fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Falha no login');
+          return res.json();
+        })
+        .then(data => {
+          localStorage.setItem('token', data.token);
+          window.location.href = 'index.html';
+        })
+        .catch(() => alert('Usuário ou senha inválidos'));
   </script>
 </body>
 </html>
