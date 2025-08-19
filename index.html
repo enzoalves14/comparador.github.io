@@ -83,7 +83,8 @@
     .fab{position:fixed;right:16px;bottom:16px;background:linear-gradient(140deg, var(--accent), var(--brand));border:none;border-radius:999px;width:56px;height:56px;color:#0b0c10;font-size:24px;box-shadow:var(--shadow);cursor:pointer}
    /* mobile menu */
     .mobile-only{display:block}
-    @media(min-width:600px){.mobile-only{display:none}}
+   @media(min-width:600px){.mobile-only{display:none}}
+    #menuToggle{font-size:24px;padding:10px 12px}
     #menu{display:flex;gap:10px;flex-wrap:wrap}
     @media(max-width:599px){
       #menu{display:none;flex-direction:column;gap:6px;background:var(--card);padding:12px;border-radius:var(--radius);margin-top:8px}
@@ -103,7 +104,7 @@
         </div>
       </div>
       <div class="spacer"></div>
-       <button class="btn ghost mobile-only" id="menuToggle">Menu</button>
+       <button class="btn ghost mobile-only" id="menuToggle" aria-label="Abrir menu">☰</button>
       <div id="menu" class="row">
         <button class="btn ghost" id="exportJsonBtn">Exportar JSON</button>
         <button class="btn ghost" id="exportCsvBtn">Exportar CSV</button>
@@ -471,6 +472,9 @@
     };
     $('#clearBtn').onclick = ()=>{ if(confirm('Limpar carrinho e dados locais?')){ cart=[]; save('cart', cart); renderCart(); renderCompare(); }};
 
+     $('#menuToggle').onclick = () => {
+     $('#menu').classList.toggle('open');
+    };
     // back to top
     $('#scrollTop').onclick = ()=> window.scrollTo({top:0, behavior:'smooth'});
 
