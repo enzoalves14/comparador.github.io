@@ -52,6 +52,11 @@
         })
         .catch(() => alert('Usuário ou senha inválidos'));
     }
+    
+    document.getElementById('guest').onclick = () => {
+      localStorage.setItem('token', 'guest');
+      window.location.href = 'index.html';
+    };
   </script>
 </body>
 </html>
