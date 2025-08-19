@@ -44,8 +44,7 @@
         body: JSON.stringify({ username, password, name, email })
       })
         .then(res => {
-          if (!res.ok) throw new Error('Falha no registro');
-          return res.json();
+             if (!res.ok) return res.json().then(err => { throw new Error(err.error || 'Falha no registro'); });
         })
         .then(() => {
           return fetch('/login', {
@@ -62,7 +61,7 @@
           localStorage.setItem('token', data.token);
           window.location.href = 'index.html';
         })
-        .catch(() => alert('Erro ao criar usuário'));
+         .catch(err => alert(err.message));
     }
   </script>
 </body>
