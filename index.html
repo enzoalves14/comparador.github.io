@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comparador de Supermercados · Protótipo</title>
+  <style>
+    :root{
+      --bg: #0b0c10;
+      --card: #111218;
+      --card-2:#151824;
+      --muted:#8892b0;
+      --txt: #e6edf6;
+      --accent:#7cfc9a;
+      --accent-2:#8ab4ff;
+      --brand:#b388ff;
+      --ring:#3b82f6;
+      --border:#222739;
+      --warn:#ffcf70;
+      --good:#5ee6a8;
+      --bad:#ff7b7b;
+      --radius:18px;
+      --shadow:0 6px 24px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:radial-gradient(1200px 800px at 10% -10%, #1b1d2b 0%, #0b0c10 55%), var(--bg);color:var(--txt);font:16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial}
+    a{color:inherit}
+
+    /* layout */
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(8px);background:rgba(11,12,16,.65);border-bottom:1px solid var(--border);z-index:50}
+    .container{max-width:1200px;margin:0 auto;padding:16px}
+    .wrap{display:grid;gap:16px}
+    @media(min-width:900px){.wrap{grid-template-columns:2fr 1fr}}
+
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .spacer{flex:1}
+
+    /* cards */
+    .card{background:linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .card h2{margin:0 0 6px;font-size:1rem}
+    .sub{color:var(--muted);font-size:.85rem;margin-bottom:12px}
+
+    /* controls */
+    .btn{appearance:none;border:1px solid var(--border);background:#0f1220;color:var(--txt);padding:10px 12px;border-radius:12px;cursor:pointer;transition:.2s;box-shadow:0 2px 0 rgba(0,0,0,.2)}
+    .btn:hover{transform:translateY(-1px);background:#12162a}
+    .btn:active{transform:translateY(0)}
+    .btn.ghost{background:transparent}
+    .btn.primary{background:linear-gradient(140deg, var(--accent-2), var(--brand));border-color:transparent;color:#0b0c10}
+
+    input, select{background:#0f1220;color:var(--txt);border:1px solid var(--border);border-radius:12px;padding:10px;outline:none;transition:.2s}
+    input:focus, select:focus{box-shadow:0 0 0 3px rgba(59,130,246,.35);border-color:var(--ring)}
+
+    .pill{border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-size:.9rem;cursor:pointer;background:#0f1220}
+    .pill.active{background:linear-gradient(140deg,#0f172a,#111827);border-color:#2a3148}
+
+    /* product grid */
+    .grid{display:grid;gap:12px}
+    .grid.products{grid-template-columns:1fr}
+    @media(min-width:600px){.grid.products{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:1024px){.grid.products{grid-template-columns:repeat(3,1fr)}}
+
+    .product{border:1px solid var(--border);border-radius:16px;padding:12px;background:linear-gradient(180deg,#0f111a,#0e1020)}
+    .product .meta{font-size:.8rem;color:var(--muted)}
+    .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+    .badge{border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:.75rem;color:var(--muted)}
+
+    /* table */
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid var(--border);font-size:.95rem}
+    th{color:var(--muted);text-align:left}
+
+    .store{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border);border-radius:14px;padding:10px;background:linear-gradient(180deg,#0f111a,#0e1020)}
+    .store.best{outline:2px solid var(--good);}
+
+    .hint{color:var(--muted);font-size:.9rem}
+    .kpi{font-weight:700}
+    .kpi.good{color:var(--good)}
+
+    .footer{color:var(--muted);font-size:.8rem;text-align:center;padding:24px}
+
+    /* FAB on mobile */
+    .fab{position:fixed;right:16px;bottom:16px;background:linear-gradient(140deg, var(--accent), var(--brand));border:none;border-radius:999px;width:56px;height:56px;color:#0b0c10;font-size:24px;box-shadow:var(--shadow);cursor:pointer}
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container row">
+      <div class="row" style="gap:12px">
+        <div style="font-size:26px">🛒</div>
+        <div>
+          <div style="font-weight:800">Comparador de Supermercados</div>
+          <div class="hint">Protótipo HTML+CSS+JS · dados mockáveis</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn ghost" id="exportJsonBtn">Exportar JSON</button>
+      <button class="btn ghost" id="exportCsvBtn">Exportar CSV</button>
+      <label class="btn ghost" for="importFile">Importar JSON</label>
+      <input id="importFile" type="file" accept="application/json" hidden />
+      <button class="btn ghost" id="clearBtn" title="Limpar carrinho e dados locais">Limpar</button>
+    </div>
+  </header>
+
+  <main class="container wrap" id="app">
+    <!-- Coluna esquerda -->
+    <section class="left column">
+      <div class="card">
+        <h2>Buscar produtos</h2>
+        <div class="sub">Adicione ao carrinho para comparar os totais</div>
+        <div class="row" style="gap:10px">
+          <input id="searchInput" placeholder="Ex: arroz, leite, café…" />
+          <span class="spacer"></span>
+        </div>
+        <div id="catPills" class="row" style="margin-top:10px"></div>
+
+        <div class="grid products" id="productsGrid" style="margin-top:12px"></div>
+      </div>
+
+      <div class="card">
+        <h2>Carrinho</h2>
+        <div class="sub">Edite quantidades ou remova itens</div>
+        <div id="cartEmpty" class="hint">Seu carrinho está vazio. Adicione produtos para começar a comparar. ✨</div>
+        <div style="overflow:auto" id="cartTableWrap" hidden>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Melhor preço</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cartBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coluna direita -->
+    <aside class="right column">
+      <div class="card">
+        <h2>Mercados</h2>
+        <div class="sub">Selecione para comparar</div>
+        <div class="row" style="gap:8px;margin-bottom:8px">
+          <button class="btn" id="btnAllStores">Todos</button>
+          <button class="btn" id="btnNoStores">Nenhum</button>
+        </div>
+        <div id="storesList" class="grid" style="grid-template-columns:1fr;gap:8px"></div>
+      </div>
+
+      <div class="card">
+        <h2>Comparação</h2>
+        <div class="sub">Totais por mercado selecionado</div>
+        <div id="compareWrap" class="grid" style="gap:10px"></div>
+        <div id="bestWrap" class="hint" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card">
+        <h2>Editor rápido (mock)</h2>
+        <div class="sub">Edite preços/mercados inline</div>
+        <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px">
+          <input id="storeName" placeholder="Novo mercado (nome)" />
+          <input id="storeDist" placeholder="Distância km" type="number" />
+          <button id="addStore" class="btn">Adicionar mercado</button>
+        </div>
+        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px">
+          <input id="prodName" placeholder="Novo produto (nome)" />
+          <input id="prodUnit" placeholder="Unidade (ex: un, pct)" value="un" />
+          <select id="prodCat">
+            <option>Grãos</option>
+            <option>Laticínios</option>
+            <option>Mercearia</option>
+            <option>Higiene</option>
+            <option>Limpeza</option>
+          </select>
+          <button id="addProd" class="btn">Adicionar produto</button>
+        </div>
+        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px">
+          <select id="priceStore"></select>
+          <select id="priceProd"></select>
+          <input id="priceVal" placeholder="Preço R$" type="number" step="0.01" />
+          <button id="setPrice" class="btn">Definir preço</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <button class="fab" id="scrollTop" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
+
+  <div class="footer">Construído como protótipo. Sem garantia de dados reais. 🌱</div>
+
+  <script>
+    // ---------- Utilidades ----------
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+    const brl = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const clamp = (n,min,max) => Math.max(min, Math.min(max, n));
+
+    const save = (k, v) => { try { localStorage.setItem('proto-'+k, JSON.stringify(v)); } catch(e){} };
+    const load = (k, d=null) => { try { const v = localStorage.getItem('proto-'+k); return v? JSON.parse(v): d; } catch(e){ return d; } };
+
+    function downloadAsFile(filename, content, mime){
+      const blob = new Blob([content], {type: mime});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
+    }
+
+    // ---------- Mocks ----------
+    const DEFAULT_STORES = [
+      { id: 'a', name: 'Mercado Solar', distanceKm: 1.2 },
+      { id: 'b', name: 'Super Estrela', distanceKm: 3.8 },
+      { id: 'c', name: 'Hiper Cometa', distanceKm: 6.0 },
+    ];
+    const DEFAULT_PRODUCTS = [
+      { id: 'arroz5kg', name: 'Arroz 5kg', unit: 'pct', category: 'Grãos' },
+      { id: 'feijao1kg', name: 'Feijão 1kg', unit: 'pct', category: 'Grãos' },
+      { id: 'leite1l', name: 'Leite 1L', unit: 'un', category: 'Laticínios' },
+      { id: 'oleo900ml', name: 'Óleo 900ml', unit: 'un', category: 'Mercearia' },
+      { id: 'acucar1kg', name: 'Açúcar 1kg', unit: 'pct', category: 'Mercearia' },
+      { id: 'cafe500g', name: 'Café 500g', unit: 'pct', category: 'Mercearia' },
+      { id: 'papelhig6', name: 'Papel Higiênico 6un', unit: 'fd', category: 'Higiene' },
+      { id: 'sabaoPo1kg', name: 'Sabão em Pó 1kg', unit: 'pct', category: 'Limpeza' },
+    ];
+    const DEFAULT_PRICES = {
+      a: {arroz5kg:27.9, feijao1kg:8.49, leite1l:4.39, oleo900ml:6.59, acucar1kg:4.99, cafe500g:18.9, papelhig6:15.5, sabaoPo1kg:12.9},
+      b: {arroz5kg:29.5, feijao1kg:7.99, leite1l:4.19, oleo900ml:6.99, acucar1kg:4.59, cafe500g:17.5, papelhig6:14.9, sabaoPo1kg:13.9},
+      c: {arroz5kg:26.9, feijao1kg:8.79, leite1l:4.69, oleo900ml:6.49, acucar1kg:4.79, cafe500g:19.5, papelhig6:16.9, sabaoPo1kg:12.5}
+    };
+
+    // ---------- Estado ----------
+    let stores = load('stores', DEFAULT_STORES);
+    let products = load('products', DEFAULT_PRODUCTS);
+    let priceMap = load('prices', DEFAULT_PRICES);
+    let cart = load('cart', []); // [{productId, qty}]
+    let selectedStores = load('selectedStores', stores.map(s=>s.id));
+
+    // ---------- Render ----------
+    function renderCategories(){
+      const cats = ['Todas', ...Array.from(new Set(products.map(p=>p.category)))];
+      const pills = cats.map(c => `<button class="pill" data-cat="${c}">${c}</button>`).join('');
+      $('#catPills').innerHTML = pills;
+      const current = load('cat', 'Todas');
+      $$(".pill").forEach(b=>{ if(b.dataset.cat===current) b.classList.add('active'); b.onclick=()=>{ save('cat', b.dataset.cat); renderProducts(); markCatActive(); }; });
+      function markCatActive(){ $$(".pill").forEach(x=>x.classList.toggle('active', x.dataset.cat===load('cat','Todas'))); }
+    }
+
+    function renderProducts(){
+      const q = ($('#searchInput').value||'').toLowerCase();
+      const cat = load('cat','Todas');
+      const list = products.filter(p => p.name.toLowerCase().includes(q) && (cat==='Todas' || p.category===cat));
+      const html = list.map(p => {
+        const priceBadges = stores.map(s=>{
+          const price = priceMap?.[s.id]?.[p.id];
+          return `<span class="badge">${s.name.split(' ')[0]}: ${price!=null? brl(price): '—'}</span>`;
+        }).join('');
+        return `<div class="product">
+          <div class="row" style="justify-content:space-between">
+            <div>
+              <div style="font-weight:600">${p.name}</div>
+              <div class="meta">${p.category} · ${p.unit}</div>
+            </div>
+            <button class="btn" data-add="${p.id}">Adicionar</button>
+          </div>
+          <div class="badges">${priceBadges}</div>
+        </div>`;
+      }).join('');
+      $('#productsGrid').innerHTML = html || `<div class="hint">Nenhum item encontrado.</div>`;
+      $$('[data-add]').forEach(b => b.onclick = () => addToCart(b.dataset.add,1));
+    }
+
+    function renderCart(){
+      if(!cart.length){
+        $('#cartEmpty').hidden = false; $('#cartTableWrap').hidden = true; return;
+      }
+      $('#cartEmpty').hidden = true; $('#cartTableWrap').hidden = false;
+      const rows = cart.map(i=>{
+        const p = products.find(x=>x.id===i.productId);
+        const prices = stores.map(s=> ({ s, price: priceMap?.[s.id]?.[i.productId] ?? null }));
+        const available = prices.filter(x=>x.price!=null);
+        const best = available.sort((a,b)=>a.price-b.price)[0];
+        const bestTxt = best? `${brl(best.price)} <span class="hint">(${best.s.name})</span>` : '<span class="hint">—</span>';
+        return `<tr>
+          <td>${p?.name||'-'}</td>
+          <td><input type="number" min="0" value="${i.qty}" data-qty="${i.productId}" style="width:80px" /></td>
+          <td>${bestTxt}</td>
+          <td><button class="btn ghost" data-remove="${i.productId}">Remover</button></td>
+        </tr>`;
+      }).join('');
+      $('#cartBody').innerHTML = rows;
+      $$('[data-qty]').forEach(inp => inp.onchange = (e)=> updateQty(inp.dataset.qty, Number(e.target.value||0)));
+      $$('[data-remove]').forEach(btn => btn.onclick = ()=> removeFromCart(btn.dataset.remove));
+    }
+
+    function renderStores(){
+      const html = stores.map(s=>{
+        const checked = selectedStores.includes(s.id) ? 'checked' : '';
+        return `<label class="store ${''}">
+          <div>
+            <div style="font-weight:600">${s.name}</div>
+            <div class="hint">${s.distanceKm} km</div>
+          </div>
+          <input type="checkbox" data-store="${s.id}" ${checked} />
+        </label>`;
+      }).join('');
+      $('#storesList').innerHTML = html;
+      $$('[data-store]').forEach(cb => cb.onchange = ()=> toggleStore(cb.dataset.store));
+
+      // editor selects
+      $('#priceStore').innerHTML = stores.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+      $('#priceProd').innerHTML = products.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+    }
+
+    function totalsByStore(){
+      const out = {};
+      for(const s of stores){
+        if(!selectedStores.includes(s.id)) continue;
+        let total=0, missing=0;
+        for(const item of cart){
+          const price = priceMap?.[s.id]?.[item.productId];
+          if(price==null){ missing++; continue; }
+          total += price * item.qty;
+        }
+        out[s.id] = { total, missing };
+      }
+      return out;
+    }
+
+    function renderCompare(){
+      const totals = totalsByStore();
+      const entries = Object.entries(totals);
+      $('#compareWrap').innerHTML = entries.length? '' : '<div class="hint">Selecione ao menos um mercado para ver os totais.</div>';
+      if(!entries.length) { $('#bestWrap').textContent = ''; return; }
+      const valid = entries.filter(([id,v])=> v.missing===0);
+      const pool = valid.length? valid: entries;
+      const best = pool.sort((a,b)=> a[1].total - b[1].total)[0];
+      const [bestId, bestVal] = best || [];
+
+      // list cards
+      const cards = stores.filter(s=>selectedStores.includes(s.id)).map(s=>{
+        const t = totals[s.id] || {total:0, missing:0};
+        const bestClass = s.id===bestId? 'best' : '';
+        return `<div class="store ${bestClass}">
+          <div>
+            <div style="font-weight:600">${s.name}</div>
+            <div class="hint">${s.distanceKm} km · ${t.missing} itens faltando</div>
+          </div>
+          <div style="text-align:right">
+            <div class="kpi">${brl(t.total)}</div>
+            ${s.id===bestId? '<div class="hint">Mais barato</div>': ''}
+          </div>
+        </div>`;
+      }).join('');
+      $('#compareWrap').innerHTML = cards;
+
+      // savings
+      const others = entries.filter(([id])=> id!==bestId && (totals[id].missing===bestVal.missing));
+      const second = others.sort((a,b)=> a[1].total - b[1].total)[0]?.[1]?.total || null;
+      const savings = (second!=null)? Math.max(0, second - bestVal.total) : 0;
+      const bestName = stores.find(x=>x.id===bestId)?.name || '';
+      $('#bestWrap').innerHTML = `Melhor opção: <b>${bestName}</b>${bestVal?.missing? ` · <span class="hint">${bestVal.missing} itens sem preço</span>`:''}<br>Economia potencial: <b class="kpi good">${brl(savings)}</b>`;
+    }
+
+    function renderAll(){
+      renderCategories();
+      renderProducts();
+      renderCart();
+      renderStores();
+      renderCompare();
+      save('stores', stores); save('products', products); save('prices', priceMap); save('cart', cart); save('selectedStores', selectedStores);
+    }
+
+    // ---------- Ações ----------
+    function addToCart(productId, qty=1){
+      const found = cart.find(i=>i.productId===productId);
+      if(found){ found.qty = clamp(found.qty + qty, 0, 999); }
+      else { cart.push({ productId, qty: clamp(qty,1,999) }); }
+      renderCart(); renderCompare(); save('cart', cart);
+    }
+
+    function updateQty(productId, qty){
+      qty = clamp(Number(qty)||0, 0, 999);
+      cart = cart.map(i=> i.productId===productId? {...i, qty}: i).filter(i=> i.qty>0);
+      renderCart(); renderCompare(); save('cart', cart);
+    }
+
+    function removeFromCart(productId){
+      cart = cart.filter(i=> i.productId!==productId);
+      renderCart(); renderCompare(); save('cart', cart);
+    }
+
+    function toggleStore(id){
+      if(selectedStores.includes(id)) selectedStores = selectedStores.filter(x=>x!==id); else selectedStores.push(id);
+      renderStores(); renderCompare(); save('selectedStores', selectedStores);
+    }
+
+    // editor
+    function slug(str){ return str.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-'); }
+
+    $('#addStore').onclick = ()=>{
+      const name = $('#storeName').value.trim(); if(!name) return;
+      const id = slug(name + Math.random().toString(36).slice(2,6));
+      const distanceKm = Number($('#storeDist').value||0);
+      stores.push({ id, name, distanceKm });
+      selectedStores.push(id);
+      $('#storeName').value=''; $('#storeDist').value='';
+      renderStores(); renderCompare(); save('stores', stores); save('selectedStores', selectedStores);
+    };
+
+    $('#addProd').onclick = ()=>{
+      const name = $('#prodName').value.trim(); if(!name) return;
+      const unit = $('#prodUnit').value||'un';
+      const category = $('#prodCat').value||'Mercearia';
+      const id = slug(name);
+      products.push({ id, name, unit, category });
+      $('#prodName').value='';
+      renderProducts(); renderStores(); save('products', products);
+    };
+
+    $('#setPrice').onclick = ()=>{
+      const s = $('#priceStore').value; const p = $('#priceProd').value; const val = Number($('#priceVal').value);
+      if(!s || !p || !val) return;
+      priceMap[s] = {...(priceMap[s]||{}), [p]: val};
+      $('#priceVal').value='';
+      renderProducts(); renderCompare(); save('prices', priceMap);
+    };
+
+    // filtros
+    $('#searchInput').oninput = ()=> renderProducts();
+    $('#btnAllStores').onclick = ()=>{ selectedStores = stores.map(s=>s.id); renderStores(); renderCompare(); save('selectedStores', selectedStores); };
+    $('#btnNoStores').onclick = ()=>{ selectedStores = []; renderStores(); renderCompare(); save('selectedStores', selectedStores); };
+
+    // export/import
+    $('#exportJsonBtn').onclick = ()=>{
+      downloadAsFile('comparador-data.json', JSON.stringify({stores, products, priceMap, cart}, null, 2), 'application/json');
+    };
+    $('#exportCsvBtn').onclick = ()=>{
+      const header = ['Mercado','Distância (km)','Itens faltando','Total (R$)'];
+      const totals = totalsByStore();
+      const rows = stores.filter(s=>selectedStores.includes(s.id)).map(s=>[
+        s.name,
+        String(s.distanceKm),
+        String(totals[s.id]?.missing ?? 0),
+        (totals[s.id]?.total ?? 0).toFixed(2).replace('.', ',')
+      ]);
+      const csv = [header, ...rows].map(r=>r.join(',')).join('\n');
+      downloadAsFile('comparacao.csv', csv, 'text/csv');
+    };
+    $('#importFile').onchange = (e)=>{
+      const f = e.target.files?.[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = (ev)=>{ try{ const data = JSON.parse(ev.target.result);
+        if(data.stores) stores = data.stores; if(data.products) products = data.products; if(data.priceMap) priceMap = data.priceMap; if(data.cart) cart = data.cart;
+        renderAll();
+      }catch(err){ alert('Arquivo inválido'); }};
+      reader.readAsText(f);
+    };
+    $('#clearBtn').onclick = ()=>{ if(confirm('Limpar carrinho e dados locais?')){ cart=[]; save('cart', cart); renderCart(); renderCompare(); }};
+
+    // back to top
+    $('#scrollTop').onclick = ()=> window.scrollTo({top:0, behavior:'smooth'});
+
+    // init
+    renderAll();
+  </script>
+</body>
+</html>
